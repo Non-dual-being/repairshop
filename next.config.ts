@@ -2,7 +2,7 @@ import {withSentryConfig} from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+
 };
 
 export default withSentryConfig(nextConfig, {
@@ -14,7 +14,7 @@ export default withSentryConfig(nextConfig, {
   project: "repairshop",
 
   // Only print logs for uploading source maps in CI
-  silent: !process.env.CI,
+  silent: false, //todo: !process.env.CI,
 
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
@@ -35,5 +35,43 @@ export default withSentryConfig(nextConfig, {
   // See the following for more information:
   // https://docs.sentry.io/product/crons/
   // https://vercel.com/docs/cron-jobs
-  automaticVercelMonitors: true
+  automaticVercelMonitors: true,
+
+  authToken: process.env.SENTRY_AUTH_TOKEN,
 });
+
+/**
+ * CI staat voor Continois Integrationm
+ * Automatisch testen bij ioploads, commits en builds
+ */
+
+
+/**
+ * 📌 Verschil tussen `npm run dev` en CI/CD
+ *
+ * ──────────────────────────────────────────────
+ * 🔹 LOKAAL (npm run dev)
+ * - Draait op jouw eigen computer.
+ * - Leest env-variabelen uit:
+ *    1. .env.development.local
+ *    2. .env.local   ← (meest gebruikt voor lokale dev)
+ *    3. .env.development
+ *    4. .env
+ * - Heeft GEEN toegang tot GitHub Actions Secrets.
+ * - Doel: ontwikkelen met hot-reloading en debuggen.
+ *
+ * ──────────────────────────────────────────────
+ * 🔹 CI/CD (bijv. GitHub Actions build)
+ * - Draait op een externe build-server (GitHub, GitLab, Vercel, etc.).
+ * - Leest env-variabelen uit de CI/CD omgeving:
+ *    - Repository Secrets (GitHub)
+ *    - Environment Variables die in hosting zijn ingesteld
+ * - Gebruikt GEEN .env.local (tenzij per ongeluk gecommit).
+ * - Doel: code automatisch bouwen, testen en deployen bij push/PR.
+ *
+ * ──────────────────────────────────────────────
+ * 💡 Belangrijk:
+ * - Lokaal: gebruik `.env.local` voor gevoelige keys (staat in `.gitignore`).
+ * - CI/CD: zet dezelfde variabelen in GitHub Secrets of hostingomgeving.
+ * - Nooit gevoelige data prefixen met `NEXT_PUBLIC_` (dat lekt naar de browser).
+ */

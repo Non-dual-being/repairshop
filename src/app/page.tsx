@@ -1,4 +1,9 @@
 import Link from "next/link"
+
+export const metadata = { 
+    title: "Public information page"
+}
+
 export default function Home() {
   return (
     <div className="bg-black bg-[url('/images/home-img.jpg')] bg-cover bg-center">
